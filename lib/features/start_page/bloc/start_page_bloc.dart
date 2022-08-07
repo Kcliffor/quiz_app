@@ -18,13 +18,17 @@ class StartPageBloc extends Bloc<StartPageEvent, StartPageBlocState> {
     required this.globalRep,
     required this.pageState,
   }) : super(StartPageInitial(pageState)) {
+    on<StartPageInit>(init);
     on<StartPageSelectTopic>(selectTopic);
     on<StartPageSelectComplexity>(selectComplexity);
     on<StartPageRunQuiz>(run);
     on<StartPageMsgErr>(err);
+
   }
 
   List<QuestionModel> questionList = [];
+
+  init(StartPageInit event, emit) async {}
 
   selectTopic(StartPageSelectTopic event, emit) {
     pageState.topic = event.topic;
@@ -50,12 +54,10 @@ class StartPageBloc extends Bloc<StartPageEvent, StartPageBlocState> {
       },
     );
     if (res.body != null && res.code == '200') {
-      QuestionsResponse response =
-          QuestionsResponse.fromJson(res.body as List<dynamic>);
+      QuestionsResponse response = QuestionsResponse.fromJson(res.body as List<dynamic>);
       questionList = response.list;
     } else if (res.code == '404' || res.code == '401' || res.code == '429') {
-      add(StartPageMsgErr(
-          (res.body as Map<String, dynamic>)['error'].toString()));
+      add(StartPageMsgErr((res.body as Map<String, dynamic>)['error'].toString()));
     } else {
       add(StartPageMsgErr('Ошибка сервера'));
     }

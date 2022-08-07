@@ -72,7 +72,15 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageBlocState> {
       getAnswers();
       emit(QuestionPageNextQuestion(pageState));
     } else {
-      globalRep.router.push(Routes.resultPage);
+      globalRep.router.pushAndReplace(
+        Routes.resultPage,
+        args: {
+          'topic': pageState.selectedTopic,
+          'complexity' : pageState.selectedComplexity,
+          'correctQuestions': counterCorrectAnswers,
+          'totalQuestions': pageState.questionList.length,
+        },
+      );
     }
   }
 

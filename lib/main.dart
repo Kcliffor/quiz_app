@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,9 +19,15 @@ class MyApp extends StatefulWidget {
 class _MyApp extends State<MyApp> {
   late final GlobalRep globalRep;
 
+  initFirebase() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+  }
+
   @override
   void initState() {
     super.initState();
+    initFirebase();
     globalRep = GlobalRep(router: AppRouterDelegate());
     globalRep.router.push(Routes.startPage);
   }

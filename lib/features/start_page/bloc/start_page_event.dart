@@ -3,6 +3,8 @@ part of 'start_page_bloc.dart';
 @immutable
 abstract class StartPageEvent {}
 
+class StartPageInit extends StartPageEvent {}
+
 class StartPageSelectTopic extends StartPageEvent {
   final String topic;
 

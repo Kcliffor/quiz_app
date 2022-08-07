@@ -35,8 +35,8 @@ class _QuestionPageState extends State<QuestionPage> {
         builder: (context, state) {
           bool multiCorrectAnswers =
               state.pageState.currentQuestion?.multipleCorrectAnswers.boolValue ?? false;
-          // multiCorrectAnswers = true;
           return Scaffold(
+            backgroundColor: const Color(0xFFF2F7F6),
             appBar: AppBar(
               title: const Text('Выберите правильный ответ'),
             ),
@@ -68,7 +68,7 @@ class _QuestionPageState extends State<QuestionPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 50),
                         Text(
                           '<${state.pageState.questionCounter}/${state.pageState.questionList.length}>',
                           style: const TextStyle(fontSize: 16),
