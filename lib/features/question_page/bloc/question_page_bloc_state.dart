@@ -11,6 +11,10 @@ class QuestionPageInitial extends QuestionPageBlocState {
   const QuestionPageInitial(QuestionPageState pageState) : super(pageState);
 }
 
+class QuestionPageNextQuestion extends QuestionPageBlocState {
+  const QuestionPageNextQuestion(QuestionPageState pageState) : super(pageState);
+}
+
 class QuestionPageUp extends QuestionPageBlocState {
   const QuestionPageUp(QuestionPageState pageState) : super(pageState);
 }

@@ -5,6 +5,13 @@ abstract class QuestionPageEvent {}
 
 class QuestionPageInit extends QuestionPageEvent {}
 
+class QuestionPageAnswer extends QuestionPageEvent {
+  final Answer? selectedAnswer;
+  final List<Answer>? selectedAnswers;
+
+  QuestionPageAnswer({this.selectedAnswer, this.selectedAnswers});
+}
+
 class QuestionPageMsgErr extends QuestionPageEvent {
   final String msg;
 

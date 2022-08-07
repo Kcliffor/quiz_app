@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/features/question_page/question_page.dart';
+import 'package:quiz_app/features/result_page/result_page.dart';
 
 import '../../../features/start_page/start_page.dart';
 import 'transition_delegate.dart';

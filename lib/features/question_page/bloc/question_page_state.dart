@@ -3,6 +3,7 @@ part of 'question_page_bloc.dart';
 class QuestionPageState {
   bool onAwait;
   String errMsg;
+  int questionCounter;
   List<QuestionModel> questionList;
   QuestionModel? currentQuestion;
   List<Answer>? answers;
@@ -11,6 +12,7 @@ class QuestionPageState {
 
   QuestionPageState({
     this.onAwait = false,
+    this.questionCounter = 1,
     this.questionList = const [],
     this.currentQuestion,
     this.answers,
@@ -21,6 +23,7 @@ class QuestionPageState {
 
   QuestionPageState copyWith({
     bool? onAwait,
+    int? questionCounter,
     String? errMsg,
     List<QuestionModel>? questionList,
     QuestionModel? currentQuestion,
@@ -30,6 +33,7 @@ class QuestionPageState {
   }) {
     return QuestionPageState(
       onAwait: onAwait ?? this.onAwait,
+      questionCounter: questionCounter ?? this.questionCounter,
       errMsg: errMsg ?? this.errMsg,
       questionList: questionList ?? this.questionList,
       currentQuestion: currentQuestion ?? this.currentQuestion,

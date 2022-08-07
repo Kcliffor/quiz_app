@@ -4,6 +4,7 @@ class RouteConstants {
   static Map<Routes, String> pagesPath = {
     Routes.startPage: 'startPage',
     Routes.questionPage: 'questionPage',
+    Routes.resultPage: 'resultPage',
   };
 
   static router(Routes route, {Object? args}) {
@@ -11,6 +12,8 @@ class RouteConstants {
       return const StartPage();
     } else if (route == Routes.questionPage) {
       return QuestionPage(args: args);
+    } else if (route == Routes.resultPage) {
+      return ResultPage(args: args);
     } else {
       return Scaffold(
         appBar: AppBar(title: const Text('404')),
@@ -23,6 +26,7 @@ class RouteConstants {
 enum Routes {
   startPage,
   questionPage,
+  resultPage,
 }
 
 class RoutesArgs {

@@ -18,7 +18,7 @@ class QuestionPage extends StatefulWidget {
 
 class _QuestionPageState extends State<QuestionPage> {
   int? _selectedIndex;
-  List<Answer>? selectedAnswers;
+  List<Answer> _selectedAnswers = [];
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> pageArgs = widget.args as Map<String, dynamic>? ?? {};
@@ -28,13 +28,14 @@ class _QuestionPageState extends State<QuestionPage> {
         pageState: QuestionPageState(
           selectedComplexity: pageArgs['complexity'] ?? '',
           selectedTopic: pageArgs['topic'] ?? '',
-          questionList: pageArgs['questions'] ?? '',
+          questionList: pageArgs['questions'],
         ),
       ),
       child: BlocBuilder<QuestionPageBloc, QuestionPageBlocState>(
         builder: (context, state) {
           bool multiCorrectAnswers =
               state.pageState.currentQuestion?.multipleCorrectAnswers.boolValue ?? false;
+          // multiCorrectAnswers = true;
           return Scaffold(
             appBar: AppBar(
               title: const Text('Выберите правильный ответ'),
@@ -69,6 +70,11 @@ class _QuestionPageState extends State<QuestionPage> {
                         ),
                         const SizedBox(height: 100),
                         Text(
+                          '<${state.pageState.questionCounter}/${state.pageState.questionList.length}>',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 15),
+                        Text(
                           state.pageState.currentQuestion?.question ?? '',
                           style: const TextStyle(
                             fontSize: 18,
@@ -85,11 +91,11 @@ class _QuestionPageState extends State<QuestionPage> {
                                 onPressed: () {
                                   setState(() {
                                     if (multiCorrectAnswers) {
-                                      if (selectedAnswers!
+                                      if (_selectedAnswers
                                           .contains(state.pageState.answers?[index])) {
-                                        selectedAnswers!.remove(state.pageState.answers![index]);
+                                        _selectedAnswers.remove(state.pageState.answers![index]);
                                       } else {
-                                        selectedAnswers!.add(state.pageState.answers![index]);
+                                        _selectedAnswers.add(state.pageState.answers![index]);
                                       }
                                     } else {
                                       _selectedIndex = index;
@@ -97,7 +103,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                   });
                                 },
                                 selected: multiCorrectAnswers
-                                    ? selectedAnswers!.contains(state.pageState.answers?[index])
+                                    ? _selectedAnswers.contains(state.pageState.answers?[index])
                                     : _selectedIndex == index,
                                 isMultipleChoice: multiCorrectAnswers,
                                 margin: const EdgeInsets.only(bottom: 5),
@@ -108,8 +114,19 @@ class _QuestionPageState extends State<QuestionPage> {
                         ),
                         const SizedBox(height: 30),
                         ElevatedButton(
-                          onPressed:
-                              _selectedIndex != null || selectedAnswers != null ? () {} : null,
+                          onPressed: _selectedIndex != null || _selectedAnswers.isNotEmpty
+                              ? () {
+                                  context.read<QuestionPageBloc>().add(QuestionPageAnswer(
+                                        selectedAnswer: _selectedIndex != null
+                                            ? state.pageState.answers?.elementAt(_selectedIndex!)
+                                            : null,
+                                        selectedAnswers:
+                                            _selectedAnswers.isNotEmpty ? _selectedAnswers : null,
+                                      ));
+                                  _selectedAnswers = [];
+                                  _selectedIndex = null;
+                                }
+                              : null,
                           child: const Text('Ответить'),
                         ),
                         const SizedBox(height: 50),
