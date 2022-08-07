@@ -35,7 +35,20 @@ class QuestionModel {
     required this.difficulty,
   });
 
-  factory QuestionModel.fromJson(Map<String, dynamic> json) => _$QuestionModelFromJson(json);
+  factory QuestionModel.fromJson(Map<String, dynamic> json) =>
+      _$QuestionModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$QuestionModelToJson(this);
+}
+
+extension XString on String {
+  bool get boolValue {
+    if (this == 'false') {
+      return false;
+    } else if (this == 'true') {
+      return true;
+    } else {
+      throw ArgumentError();
+    }
+  }
 }

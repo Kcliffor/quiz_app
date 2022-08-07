@@ -15,57 +15,79 @@ class StartPage extends StatelessWidget {
         globalRep: context.read<GlobalRep>(),
         pageState: StartPageState(),
       ),
-      child: BlocBuilder<StartPageBloc, StartPageBlocState>(
+      child: BlocConsumer<StartPageBloc, StartPageBlocState>(
+        listener: (context, state) {
+          if (state is StartPageError) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.pageState.errMsg),
+                ),
+              );
+          }
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Выберите тему и сложность квиза:'),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 100),
-                  SelectItemWidget(
-                    title: 'Тема:',
-                    hintTitle: 'Выберите тему :',
-                    items: const [
-                      'Linux',
-                      'DevOps',
-                      'Networking',
-                      'Programming',
-                      'Cloud',
-                      'Docker',
-                      'Kubernetes',
-                    ],
-                    selected: (String value) {
-                      context.read<StartPageBloc>().add(StartPageSelectTopic(value));
-                    },
+            body: state.pageState.onAwait
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 100),
+                        SelectItemWidget(
+                          title: 'Тема:',
+                          hintTitle: 'Выберите тему :',
+                          items: const [
+                            'Linux',
+                            'DevOps',
+                            'Networking',
+                            'Programming',
+                            'Cloud',
+                            'Docker',
+                            'Kubernetes',
+                          ],
+                          selected: (String value) {
+                            context
+                                .read<StartPageBloc>()
+                                .add(StartPageSelectTopic(value));
+                          },
+                        ),
+                        const SizedBox(height: 50),
+                        SelectItemWidget(
+                          title: 'Сложность:',
+                          hintTitle: 'Выберите сложность:',
+                          items: const [
+                            'Easy',
+                            'Medium',
+                            'Hard',
+                          ],
+                          selected: (String value) {
+                            context
+                                .read<StartPageBloc>()
+                                .add(StartPageSelectComplexity(value));
+                          },
+                        ),
+                        const SizedBox(height: 100),
+                        ElevatedButton(
+                          onPressed: state.pageState.topic != null &&
+                                  state.pageState.complexity != null
+                              ? () => context
+                                  .read<StartPageBloc>()
+                                  .add(StartPageRunQuiz())
+                              : null,
+                          child: const Text('Начать!'),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 50),
-                  SelectItemWidget(
-                    title: 'Сложность:',
-                    hintTitle: 'Выберите сложность:',
-                    items: const [
-                      'Easy',
-                      'Medium',
-                      'Hard',
-                    ],
-                    selected: (String value) {
-                      context.read<StartPageBloc>().add(StartPageSelectComplexity(value));
-                    },
-                  ),
-                  const SizedBox(height: 100),
-                  ElevatedButton(
-                    onPressed: state.pageState.topic != null && state.pageState.complexity != null
-                        ? () => context.read<StartPageBloc>().add(StartPageRunQuiz())
-                        : null,
-                    child: const Text('Начать!'),
-                  ),
-                ],
-              ),
-            ),
           );
         },
       ),

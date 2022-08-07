@@ -19,6 +19,10 @@ class StartPageComplexitySelected extends StartPageBlocState {
   const StartPageComplexitySelected(StartPageState pageState) : super(pageState);
 }
 
+class StartPageUp extends StartPageBlocState {
+  const StartPageUp(StartPageState pageState) : super(pageState);
+}
+
 class StartPageError extends StartPageBlocState {
   const StartPageError(StartPageState pageState) : super(pageState);
 }

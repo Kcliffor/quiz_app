@@ -28,15 +28,13 @@ abstract class HTTPClient {
     ServerResponse? res;
     try {
       final response = await client?.get(
-        path(command: command, params: params, args: args, url: serverUrl),
-        // options: Options(
-        //   headers: makeHeaders(token: token),
-        // ),
+        path(command: command, params: params, args: args, url: serverUrl)
       );
       res = await responseEngine(resTxt: response);
     } on DioError catch (e) {
       res = ServerResponse(
         err: e.toString(),
+        body: e.response!.data,
         msgText: '',
         code: e.response?.statusCode.toString() ?? '',
       );
@@ -45,18 +43,6 @@ abstract class HTTPClient {
     }
 
     return res;
-  }
-
-  static Map<String, String> makeHeaders({
-    required String token,
-  }) {
-    Map<String, String> headers = {
-      'Authorization': token,
-      'Content-Type': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-    };
-
-    return headers;
   }
 
   static Future<ServerResponse> responseEngine({

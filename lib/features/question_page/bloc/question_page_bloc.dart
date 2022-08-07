@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/data/model/question_model.dart';
-import 'package:quiz_app/data/model/questions_response.dart';
-import 'package:quiz_app/data/model/server_response.dart';
+import 'package:quiz_app/domain/models/answers.dart';
 import 'package:quiz_app/domain/repositories/global_rep.dart';
 
 part 'question_page_bloc_state.dart';
@@ -23,26 +22,22 @@ class QuestionPageBloc extends Bloc<QuestionPageEvent, QuestionPageBlocState> {
     add(QuestionPageInit());
   }
 
-  List<QuestionModel> questionList = [];
-
-  init(QuestionPageInit event, emit) async {
-    pageState.onAwait = true;
-    emit(QuestionPageUp(pageState));
-    ServerResponse res = await globalRep.netExchange.netGet(
-      command: 'api/v1/questions',
-      args: {
-        'apiKey': 'j24WhINsXuMG7PszLmbkLHqRiXRoFnjRZrHxkwDa',
-        'difficulty': pageState.selectedComplexity,
-        'category': pageState.selectedTopic,
-        'limit': '10',
-      },
+  init(QuestionPageInit event, emit) {
+    pageState.currentQuestion = pageState.questionList.first;
+    pageState.answers = List.generate(
+      pageState.currentQuestion?.answers.length ?? 0,
+      (index) => Answer(
+        id: pageState.currentQuestion?.answers.keys.elementAt(index) ?? '',
+        answer: pageState.currentQuestion?.answers.values.elementAt(index),
+        isCorrect: pageState
+                .currentQuestion
+                ?.correctAnswers[
+                    '${pageState.currentQuestion?.answers.keys.elementAt(index)}_correct']
+                ?.boolValue ??
+            false,
+      ),
     );
-    if (res.body != null && res.code == '200') {
-      QuestionsResponse response = QuestionsResponse.fromJson(res.body as List<dynamic>);
-      questionList = response.list;
-    }
-
-    pageState.onAwait = false;
+    pageState.answers?.removeWhere((element) => element.answer == null);
     emit(QuestionPageInitial(pageState));
   }
 
