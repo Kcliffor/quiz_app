@@ -109,7 +109,7 @@ class ResultPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 const Text(
-                                  'Сохранить результат?',
+                                  'Сохранить результат в Firebase Firestore?',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: 18),
                                 ),
